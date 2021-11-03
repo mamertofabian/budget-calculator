@@ -1,28 +1,33 @@
 <script lang="ts">
-  import { setContext } from "svelte";
-  import Navbar from "../components/Navbar.svelte";
-  import ExpenseList from "../components/ExpenseList.svelte";
-  import expensesData, { ExpenseInterface } from "../modules/expenses";
-  import type { StateInterface } from "../modules/interfaces";
+  import { setContext } from 'svelte';
+  import Navbar from '../components/Navbar.svelte';
+  import ExpenseList from '../components/ExpenseList.svelte';
+  import expensesData, { ExpenseInterface } from '../modules/expenses';
+  import type { StateInterface } from '../modules/interfaces';
 
   const removeExpense = (id: number) => {
     expenses = expenses.filter((expense) => expense.id !== id);
   };
 
   const state: StateInterface = {
-    name: "just a name",
+    name: 'just a name',
     removeExpense,
   };
 
   let expenses: ExpenseInterface[] = [...expensesData];
 
-  setContext("state", state);
+  setContext('state', state);
+
+  const clearExpenses = () => {
+    expenses = [];
+  }
 </script>
 
-<Navbar />
+<Navbar/>
 
 <main class="content">
-  <ExpenseList {expenses} />
+  <ExpenseList {expenses}/>
+  <button type="button" class="btn btn-primary btn-block" on:click={clearExpenses}>clear expenses</button>
 </main>
 
 <style>
