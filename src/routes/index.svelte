@@ -11,27 +11,38 @@
     expenses = expenses.filter((expense) => expense.id !== id);
   };
 
-  const state: StateInterface = {
-    name: 'just a name',
-    removeExpense,
-  };
-
   let expenses: ExpenseInterface[] = [...expensesData];
+  // set editing variables
+  let setName = '';
+  let setAmount = null;
+  let setId = null;
+  // reactive
   $: total = expenses.reduce((acc, curr) => {
     console.log({acc, amount: curr.amount});
     return (acc + curr.amount)
   }, 0);
 
-  setContext('state', state);
-
   const clearExpenses = () => {
     expenses = [];
   }
 
-  const addExpense = ({name, amount}) => {
-    const expense = {id: Math.random() * Date.now(), name, amount}
+  const addExpense = ({name, amount}: {name: string, amount: number}) => {
+    const expense: ExpenseInterface = {id: Math.random() * Date.now(), name, amount}
     expenses = [expense, ...expenses];
   }
+
+  const setModifiedExpense = (id: number) => {
+    const expense = expenses.find(item => item.id === id);
+    setId = expense.id;
+    setName = expense.name;
+    setAmount = expense.amount;
+  }
+
+  const state: StateInterface = {
+    setModifiedExpense,
+    removeExpense,
+  };
+  setContext('state', state);
 </script>
 
 <Navbar/>

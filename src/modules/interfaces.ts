@@ -1,4 +1,4 @@
 export interface StateInterface {
-  name: string;
+  setModifiedExpense: (id: number) => void;
   removeExpense: (id: number) => void;
 }
