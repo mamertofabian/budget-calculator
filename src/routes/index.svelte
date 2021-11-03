@@ -27,12 +27,17 @@
   const clearExpenses = () => {
     expenses = [];
   }
+
+  const addExpense = ({name, amount}) => {
+    const expense = {id: Math.random() * Date.now(), name, amount}
+    expenses = [expense, ...expenses];
+  }
 </script>
 
 <Navbar/>
 
 <main class="content">
-  <ExpenseForm />
+  <ExpenseForm {addExpense} />
   <Totals title="Total expenses" {total}/>
   <ExpenseList {expenses}/>
   <button type="button" class="btn btn-primary btn-block" on:click={clearExpenses}>clear expenses</button>

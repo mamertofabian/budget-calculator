@@ -3,11 +3,15 @@
 
   let name = '';
   let amount = null;
+  export let addExpense;
+
   // $: console.log({name, amount});
   $: isEmpty = !name || !amount;
 
   const handleSubmit = () => {
-    console.log({name, amount});
+    // using object parameter {} takes advantage of ES6 feature when the property name and the variable name is the same,
+    // we can use the shorthand. + no need to worry about the order.
+    addExpense({name, amount});
     name = '';
     amount = null;
   };
