@@ -1,6 +1,6 @@
 <script lang="ts">
   import { getContext } from 'svelte';
-  import { fly } from 'svelte/transition'
+  import { fly, slide } from 'svelte/transition'
   import { quintOut } from 'svelte/easing'
   import type { StateInterface } from '../modules/interfaces';
 
@@ -26,7 +26,7 @@
       >
     </h2>
     {#if displayAmount}
-      <h4 transition:fly={{x: -100, y: -100, duration: 500, delay: 200, easing: quintOut}}>amount: ${amount}</h4>
+      <h4 in:fly={{x: -100, y: -100, duration: 500, delay: 200, easing: quintOut}} out:slide>amount: ${amount}</h4>
     {/if}
   </div>
   <div class="expense-buttons">
