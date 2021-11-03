@@ -5,6 +5,7 @@
   import expensesData, { ExpenseInterface } from '../modules/expenses';
   import type { StateInterface } from '../modules/interfaces';
   import Totals from '../components/Totals.svelte';
+  import ExpenseForm from '../components/ExpenseForm.svelte';
 
   const removeExpense = (id: number) => {
     expenses = expenses.filter((expense) => expense.id !== id);
@@ -31,6 +32,7 @@
 <Navbar/>
 
 <main class="content">
+  <ExpenseForm />
   <Totals title="Total expenses" {total}/>
   <ExpenseList {expenses}/>
   <button type="button" class="btn btn-primary btn-block" on:click={clearExpenses}>clear expenses</button>
