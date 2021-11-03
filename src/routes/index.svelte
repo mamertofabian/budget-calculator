@@ -21,12 +21,25 @@
   let setName = '';
   let setAmount = null;
   let setId = null;
+  // toggle form variables
+  let isFormOpen = false;
   // reactive
   $: isEditing = !!setId;
   $: total = expenses.reduce((acc, curr) => {
     console.log({acc, amount: curr.amount});
     return (acc + curr.amount)
   }, 0);
+
+  const showForm = () => {
+    isFormOpen = true;
+  }
+
+  const hideForm = () => {
+    isFormOpen = false;
+    setId = null;
+    setName = '';
+    setAmount = null;
+  }
 
   const clearExpenses = () => {
     expenses = [];
@@ -51,6 +64,7 @@
     setId = expense.id;
     setName = expense.name;
     setAmount = expense.amount;
+    showForm();
   }
 
   const state: StateInterface = {
@@ -60,10 +74,12 @@
   setContext('state', state);
 </script>
 
-<Navbar/>
+<Navbar {showForm}/>
 
 <main class="content">
-  <ExpenseForm {addExpense} name="{setName}" amount="{setAmount}" {isEditing} {editExpense}/>
+  {#if isFormOpen}
+    <ExpenseForm {addExpense} name="{setName}" amount="{setAmount}" {isEditing} {editExpense} {hideForm}/>
+  {/if}
   <Totals title="Total expenses" {total}/>
   <ExpenseList {expenses}/>
   <button type="button" class="btn btn-primary btn-block" on:click={clearExpenses}>clear expenses</button>
