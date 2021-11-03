@@ -7,6 +7,11 @@
   import Totals from '../components/Totals.svelte';
   import ExpenseForm from '../components/ExpenseForm.svelte';
 
+  interface Expense {
+    name: string;
+    amount: number;
+  }
+
   const removeExpense = (id: number) => {
     expenses = expenses.filter((expense) => expense.id !== id);
   };
@@ -17,6 +22,7 @@
   let setAmount = null;
   let setId = null;
   // reactive
+  $: isEditing = !!setId;
   $: total = expenses.reduce((acc, curr) => {
     console.log({acc, amount: curr.amount});
     return (acc + curr.amount)
@@ -26,9 +32,18 @@
     expenses = [];
   }
 
-  const addExpense = ({name, amount}: {name: string, amount: number}) => {
+  const addExpense = ({name, amount}: Expense) => {
     const expense: ExpenseInterface = {id: Math.random() * Date.now(), name, amount}
     expenses = [expense, ...expenses];
+  }
+
+  const editExpense = ({name, amount}: Expense) => {
+    expenses = expenses.map(item => {
+      return item.id === setId ? {...item, name, amount} : item;
+    });
+    setId = null;
+    setName = '';
+    setAmount = null;
   }
 
   const setModifiedExpense = (id: number) => {
@@ -48,7 +63,7 @@
 <Navbar/>
 
 <main class="content">
-  <ExpenseForm {addExpense} />
+  <ExpenseForm {addExpense} name="{setName}" amount="{setAmount}" {isEditing} {editExpense}/>
   <Totals title="Total expenses" {total}/>
   <ExpenseList {expenses}/>
   <button type="button" class="btn btn-primary btn-block" on:click={clearExpenses}>clear expenses</button>
