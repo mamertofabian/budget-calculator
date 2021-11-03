@@ -1,11 +1,11 @@
 <script lang="ts">
-  import { setContext } from 'svelte';
+  import { onMount, setContext } from 'svelte';
   import Navbar from '../components/Navbar.svelte';
   import ExpenseList from '../components/ExpenseList.svelte';
-  import expensesData, { ExpenseInterface } from '../modules/expenses';
   import type { StateInterface } from '../modules/interfaces';
   import Totals from '../components/Totals.svelte';
   import ExpenseForm from '../components/ExpenseForm.svelte';
+  import { ExpenseInterface } from '../modules/expenses';
 
   interface Expense {
     name: string;
@@ -14,9 +14,10 @@
 
   const removeExpense = (id: number) => {
     expenses = expenses.filter((expense) => expense.id !== id);
+    setLocalStorage();
   };
 
-  let expenses: ExpenseInterface[] = [...expensesData];
+  let expenses: ExpenseInterface[] = [];
   // set editing variables
   let setName = '';
   let setAmount = null;
@@ -43,17 +44,20 @@
 
   const clearExpenses = () => {
     expenses = [];
+    setLocalStorage();
   }
 
   const addExpense = ({name, amount}: Expense) => {
     const expense: ExpenseInterface = {id: Math.random() * Date.now(), name, amount}
     expenses = [expense, ...expenses];
+    setLocalStorage();
   }
 
   const editExpense = ({name, amount}: Expense) => {
     expenses = expenses.map(item => {
       return item.id === setId ? {...item, name, amount} : item;
     });
+    setLocalStorage();
     setId = null;
     setName = '';
     setAmount = null;
@@ -72,6 +76,14 @@
     removeExpense,
   };
   setContext('state', state);
+
+  const setLocalStorage = () => {
+    localStorage.setItem('expenses', JSON.stringify(expenses));
+  }
+
+  onMount(() => {
+    expenses = localStorage.getItem('expenses') ? JSON.parse(localStorage.getItem('expenses')) : [];
+  });
 </script>
 
 <Navbar {showForm}/>
