@@ -1,11 +1,12 @@
 <script lang="ts">
-  import { onMount, setContext } from 'svelte';
+  import { afterUpdate, onMount, setContext } from 'svelte';
   import Navbar from '../components/Navbar.svelte';
   import ExpenseList from '../components/ExpenseList.svelte';
   import type { StateInterface } from '../modules/interfaces';
   import Totals from '../components/Totals.svelte';
   import ExpenseForm from '../components/ExpenseForm.svelte';
   import { ExpenseInterface } from '../modules/expenses';
+  import Modal from '../components/Modal.svelte';
 
   interface Expense {
     name: string;
@@ -84,13 +85,19 @@
   onMount(() => {
     expenses = localStorage.getItem('expenses') ? JSON.parse(localStorage.getItem('expenses')) : [];
   });
+
+  afterUpdate(() => {
+    console.log('afterUpdate');
+  });
 </script>
 
 <Navbar {showForm}/>
 
 <main class="content">
   {#if isFormOpen}
-    <ExpenseForm {addExpense} name="{setName}" amount="{setAmount}" {isEditing} {editExpense} {hideForm}/>
+    <Modal>
+      <ExpenseForm {addExpense} name="{setName}" amount="{setAmount}" {isEditing} {editExpense} {hideForm}/>
+    </Modal>
   {/if}
   <Totals title="Total expenses" {total}/>
   <ExpenseList {expenses}/>
